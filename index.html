@@ -7,6 +7,8 @@
   <style type="text/css">
   html, body {width: 100%; height: 100%;}
 
+
+  /* basic thumbnail frame styles */
   .thumb {
     position: absolute;
     background-color: rgba(1,1,1,.5);
@@ -50,6 +52,8 @@
     bottom: 1px;
     font-size: 11px;
   }
+
+  /* alternative thumbnail styles */
   .alt .banner {
     height: 60px;
 
@@ -74,11 +78,32 @@
   <div id="reactbox" class="alt"></div>
   <script type="text/jsx">
 
+    // stolen from underscore.js
+    var shuffle = function(set) {
+      var length = set.length;
+      var shuffled = Array(length);
+      for (var index = 0, rand; index < length; index++) {
+        rand = Math.floor(Math.random() * (index + 1));
+        if (rand !== index) shuffled[index] = shuffled[rand];
+        shuffled[rand] = set[index];
+      }
+      return shuffled;
+    };
+
     var ThumbBox = React.createClass({
       render: function(){
+        var params = this.props.params;
+        var thumbStyle = {
+          width: params.width,
+          height: params.height,
+          left: params.left,
+          top: params.top
+        };
+        var title = params.title;
+
         return (
-          <div className="thumb" style={this.props.thumbStyle}>
-            <div className="title">{this.props.thumbProps.title}</div>
+          <div className="thumb" style={thumbStyle}>
+            <div className="title">{this.props.metadata.title}</div>
             <div className="banner">
               <div className="timecode">15:42</div>
             </div>
@@ -89,19 +114,22 @@
 
     var ProtoFrame = React.createClass({
       render: function(){
-        var styleProps = this.props.thumbStyle;
-        var thumbProps = this.props.thumbProps;
-
+        var proto = this.props.details;
         var protoStyle = {
           backgroundSize: "cover",
-          backgroundImage: "url("+ this.props.details.canvas +")",
-          height: this.props.details.height,
-          width: this.props.details.width
+          backgroundImage: "url("+ proto.canvas +")",
+          height: proto.height,
+          width: proto.width
         };
+
+        var metadata = shuffle(proto.metadata)
+        var thumbs = proto.dimensions.map(function(e, i, a) {
+          return (<ThumbBox params={e} metadata={metadata[i]} key={proto.canvas + i} />)
+        })
 
         return (
           <div style={protoStyle} className="protoContainer">
-            <ThumbBox thumbStyle={styleProps} thumbProps={thumbProps} />
+            {thumbs}
           </div>
         );
       }
@@ -112,18 +140,28 @@
       canvas: "img/chrome/G2lH.png",
       width: 1388,
       height: 889,
-      thumbs: [
+      dimensions: [
         {
-          thumbProps: {title: "What is an algorithm?"},
-          styleProps: {width: 256, height: 144, top: 206, left: 544}
+          width: 256, height: 144,
+          top: 206, left: 544
+        },
+        {
+          width: 256, height: 144,
+          top: 395, left: 544
+        },
+        {
+          width: 256, height: 144,
+          top: 584, left: 544
         }
+      ],
+      metadata: [
+        { title: "What is an algorithm?" },
+        { title: "A guessing game" },
+        { title: "Route-finding" },
       ]
     }
     var box = document.getElementById("reactbox");
-    React.render(<ProtoFrame
-        thumbStyle={protoProps.thumbs[0].styleProps} // move these two into the proto
-        thumbProps={protoProps.thumbs[0].thumbProps}
-        details={protoProps} />, box);
+    React.render(<ProtoFrame details={protoProps} />, box);
   </script>
 </body>
 </html>
