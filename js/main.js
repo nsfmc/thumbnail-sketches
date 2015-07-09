@@ -13,7 +13,14 @@
             return decodeURIComponent(pair[1]);
         }
     }
-}
+  }
+
+  // simple version of python range
+  var range = function(count) {
+    var acc = [];
+    for(var i = 0; i < count; i += 1) { acc[i] = i; }
+    return acc;
+  };
 
   // stolen from underscore.js
   var shuffle = function(set) {
@@ -46,6 +53,58 @@
 
       return (
         <div className="thumb" style={thumbStyle} />
+      );
+    }
+  });
+
+  var ScrubbingThumb = React.createClass({
+    propTypes: {
+       metadata: React.PropTypes.object
+    },
+
+    getDefaultProps: function(){
+
+    },
+    getInitialState: function(){
+      return {"hovering": -1};
+    },
+
+    render: function(){
+      var params = this.props.params;
+      var meta = this.props.metadata;
+      var bgimg = meta.img;
+
+      var thumbStyle = {
+        width: params.width,
+        height: params.height,
+        left: params.left,
+        top: params.top,
+        backgroundImage: ("url(" + bgimg + ")")
+      };
+      if (this.state.hovering !== -1) {
+        thumbStyle.backgroundImage = "url(" + + ")"
+      }
+
+      var cols = 5;
+      var that = this;
+
+      var colElts = range(cols).map(function(e, i){
+        var colstyle = {
+          width: (Math.floor(100 / cols) + "%"),
+          display: "inline-block",
+          height: "100%",
+          backgroundColor: "#c0c",
+          opacity: (that.state.hovering === i ? 1 : 0),
+
+        };
+
+        return <div style={colstyle} key={i + "col"} onMouseEnter={function(){ that.setState({"hovering": i}); }} />;
+      });
+
+      return (
+        <div className="thumb" style={thumbStyle} onMouseLeave={function(){ that.setState({"hovering": -1}); }} >
+          {colElts}
+        </div>
       );
     }
   });
@@ -108,6 +167,8 @@
         switch (thumbnailType) {
           case "static":
             return (<StaticThumbBox params={e} metadata={meta[i]} key={proto.canvas + i} />);
+          case "scrub":
+            return (<ScrubbingThumb params={e} metadata={meta[i]} key={proto.canvas + i} />);
           default:
             return (<HoveringThumbBox params={e} metadata={meta[i]} key={proto.canvas + i} />);
         }
