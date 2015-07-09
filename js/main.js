@@ -183,8 +183,18 @@
           top: 467, left: 330
         }
       ]
+    },
+    {
+      canvas: "img/chrome/ipUm.png",
+      width: 1388,
+      height: 889,
+      dimensions: [
+        {
+          width: 1014, height: 447,
+          top: 248, left: 327
+        }
+      ]
     }
-
   ];
 
   var metadata = [
