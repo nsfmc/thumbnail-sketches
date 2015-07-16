@@ -53,6 +53,61 @@ var SimpleThumb = React.createClass({
   }
 });
 
+var FuzzyThumb = React.createClass({
+  propTypes: {
+    image: React.PropTypes.string,
+    width: React.PropTypes.number,
+    buttonSize: React.PropTypes.number
+  },
+  getDefaultProps: function(){
+    return {
+      branded: false,
+      width: 160,
+    };
+  },
+  render: function(){
+    var buttonSize = this.props.buttonSize || this.props.width * .2;
+    var containerStyle = {
+      width: this.props.width,
+      height: (this.props.width * 9 / 16),
+      position: "relative",
+      backgroundImage: "url(" + this.props.image +")",
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+      borderRadius: "2.5px",
+      backgroundClip: "padding-box",
+      overflow: "hidden"
+    };
+    var offsetLeft = (this.props.width - buttonSize) / 2;
+    var offsetTop = (containerStyle.height - buttonSize) / 2;
+
+    var clipStyle = {
+      width: buttonSize,
+      height: buttonSize,
+      borderRadius: "100%",
+      overflow: "hidden",
+      transform: "translate(" + offsetLeft + "px, " + offsetTop + "px)"
+    };
+    var blur = {
+      width: containerStyle.width,
+      height: containerStyle.height,
+      backgroundImage: "url(" + this.props.image + ")",
+      backgroundSize: "cover",
+      backgroundPosition: "50% 50%",
+      transform: "translate(" + (-1 * offsetLeft) + "px, " + (-1 * offsetTop) + "px)",
+      "-webkit-filter": "blur(10px)"
+    };
+
+    return (
+      <div style={containerStyle}>
+        <div style={clipStyle}>
+          <div style={blur}></div>
+        </div>
+      </div>
+    );
+  }
+});
+
 var SearchThumb = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
@@ -240,7 +295,8 @@ var StyleGuide = React.createClass({
         <section>
           <p>This is the style guide for video thumbnails, it talks a bit about how we got here
           and also some recommendations for people implementing the thumbnails.</p>
-          <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius:</p>
+          <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
+          no images at all, this is what you'd see before we had generated a thumbnail.</p>
           {shuffle(domains).map(function(e){
             var phrase = "some very long title taking three lines";
             var rearranged = shuffle(phrase.split(" ")).join(" ");
@@ -355,7 +411,9 @@ var StyleGuide = React.createClass({
            </div>
            <div style={{display: "inline-block", margin: 1}}>
            <SimpleThumb image="img/descartes-noicon.png" width={256}/>
-            </div>
+           </div>
+           <FuzzyThumb image="img/turban.jpeg" />
+           <FuzzyThumb image="img/turban.jpeg" width={512} />
 
           <h2>Articles</h2>
           <h2>Exercises</h2>
