@@ -57,12 +57,13 @@ var FuzzyThumb = React.createClass({
   propTypes: {
     image: React.PropTypes.string,
     width: React.PropTypes.number,
-    buttonSize: React.PropTypes.number
+    buttonSize: React.PropTypes.number,
+    colorOverlay: React.PropTypes.string
   },
   getDefaultProps: function(){
     return {
       branded: false,
-      width: 160,
+      width: 160
     };
   },
   render: function(){
@@ -71,7 +72,7 @@ var FuzzyThumb = React.createClass({
       width: this.props.width,
       height: (this.props.width * 9 / 16),
       position: "relative",
-      backgroundImage: "url(" + this.props.image +")",
+      backgroundImage: "url(" + this.props.image + ")",
       backgroundSize: "cover",
       backgroundPosition: "center center",
       borderRadius: "2.5px",
