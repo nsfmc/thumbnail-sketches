@@ -1,0 +1,35 @@
+/* styleguide.css */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "proxima-nova-condensed",  sans-serif;
+  font-weight: normal;
+}
+body {
+  font: 16px/22px helvetica;
+}
+
+article {
+  width: 45em;
+}
+section p {
+  width: 35em;
+  font-family: palatino;
+  color: #444;
+  line-height: 23px
+}
+section p a:link {
+  color: #900;
+}
+section p a:visited {
+  color: #666;
+}
+section p a:focus {
+  color: black;
+}
+section p a:hover {
+  color: black;
+}
+
+section p a:active {
+  color: white;
+}

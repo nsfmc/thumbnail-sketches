@@ -1,4 +1,4 @@
-/*global React document */
+/*global React document window */
 
 (function(){
   "use strict";
@@ -82,10 +82,11 @@
         backgroundImage: ("url(" + bgimg + ")")
       };
       if (this.state.hovering !== -1) {
-        thumbStyle.backgroundImage = "url(" + + ")"
+
+        thumbStyle.backgroundImage = "url(" + this.props.metadata + ")"
       }
 
-      var cols = 5;
+      var cols = 10;
       var that = this;
 
       var colElts = range(cols).map(function(e, i){
@@ -259,7 +260,8 @@
   ];
 
   var metadata = [
-    { shortTitle: "What is an algorithm?", img: "img/addition_1.png", hover: "img/addition_1.gif" },
+    { shortTitle: "What is an algorithm?", img: "img/addition_1.png", hover: "img/addition_1.gif",
+      scrub: "img/addition_1" },
     { shortTitle: "A guessing game", img: "img/addition_1.png", hover: "img/addition_1.gif" },
     { shortTitle: "Route-finding", img: "img/addition_1.png", hover: "img/addition_1.gif" },
     { shortTitle: "Get Started", img: "img/addition_1.png", hover: "img/addition_1.gif" }
