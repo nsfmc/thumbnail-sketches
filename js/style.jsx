@@ -46,6 +46,7 @@ var SearchThumb = React.createClass({
 
     var titleProps = this.props.titleProps || {};
     titleProps.width = titleProps.width || (.625 * this.props.width);
+    titleProps.height = titleProps.height || containerStyle.height;
     titleProps.fontSize = titleProps.fontSize || (this.props.width / 160 * 13);
     titleProps.paddingLeft = titleProps.paddingLeft || ((this.props.width - titleProps.width) / 2);
 
@@ -64,6 +65,7 @@ var TitleBox = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
     width: React.PropTypes.number,
+    height: React.PropTypes.number,
     fontSize: React.PropTypes.number,
     paddingLeft: React.PropTypes.number
   },
@@ -292,6 +294,11 @@ var StyleGuide = React.createClass({
            the world, not to mention our site.</p>
            <p>For simplicity, we generate a 1280 &times; 720 (<em>720p</em>) that we send to youtube, but we also support on tutorial pages, thumbnails of size 256 &times; 144</p>
 
+           <div style={{display: "inline-block", margin: 1}}>
+             <SearchThumb
+              domain="humanities" title="Man with red hat" image="img/turban.jpeg"
+              branded width={512} />
+           </div>
            <div style={{display: "inline-block", margin: 1}}>
              <SearchThumb
               domain="humanities" title="Man with red hat" image="img/turban.jpeg"
