@@ -22,6 +22,37 @@ var range = function(count) {
   return acc;
 };
 
+var SimpleThumb = React.createClass({
+  propTypes: {
+    image: React.PropTypes.string,
+    width: React.PropTypes.number
+  },
+  getDefaultProps: function(){
+    return {
+      branded: false,
+      width: 160};
+  },
+  render: function(){
+    var containerStyle = {
+      width: this.props.width,
+      height: (this.props.width * 9 / 16),
+      position: "relative",
+      backgroundImage: "url(" + this.props.image +")",
+      backgroundSize: "cover",
+      borderRadius: "2.5px",
+      backgroundClip: "padding-box",
+      overflow: "hidden"
+    };
+
+    return (
+      <div style={containerStyle} className="search-thumb">
+        {this.props.branded && <KAOverlay /> }
+      </div>
+    );
+
+  }
+});
+
 var SearchThumb = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
@@ -42,6 +73,9 @@ var SearchThumb = React.createClass({
       width: this.props.width,
       height: (this.props.width * 9 / 16),
       position: "relative",
+      borderRadius: "2.5px",
+      backgroundClip: "padding-box",
+      overflow: "hidden"
     };
 
     var titleProps = this.props.titleProps || {};
@@ -206,7 +240,7 @@ var StyleGuide = React.createClass({
         <section>
           <p>This is the style guide for video thumbnails, it talks a bit about how we got here
           and also some recommendations for people implementing the thumbnails.</p>
-          <p>This is a basic thumbnail:</p>
+          <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius:</p>
           {shuffle(domains).map(function(e){
             var phrase = "some very long title taking three lines";
             var rearranged = shuffle(phrase.split(" ")).join(" ");
@@ -219,12 +253,12 @@ var StyleGuide = React.createClass({
           <p>We also have thumbnails that we present externally in spots like google search results or on youtube.
            they look like this.</p>
            {shuffle(domains).map(function(e){
-             var phrase = "there all is aching";
+             var phrase = "an upsetting number of pancakes";
              var rearranged = shuffle(phrase.split(" ")).join(" ");
 
              return (
              <div style={{display: "inline-block", margin: 1 }}>
-               <SearchThumb title={rearranged} branded domain={e} />
+               <SearchThumb title={rearranged} branded domain={e} titleProps={{width: 110}} />
              </div>
            ); })}
 
@@ -296,19 +330,35 @@ var StyleGuide = React.createClass({
 
            <div style={{display: "inline-block", margin: 1}}>
              <SearchThumb
-              domain="humanities" title="Man with red hat" image="img/turban.jpeg"
+              domain="humanities" title="Man w/ red turban" image="img/turban.jpeg"
               branded width={512} />
            </div>
            <div style={{display: "inline-block", margin: 1}}>
              <SearchThumb
-              domain="humanities" title="Man with red hat" image="img/turban.jpeg"
+              domain="humanities" title="Man w/ red turban" image="img/turban.jpeg"
               width={256} />
            </div>
 
            <h2>Content Annotations</h2>
+           <p>Need to fill in the myriad possibilities of how thumbs may be annotated with their content types.</p>
+           <div style={{display: "inline-block", margin: 1}}>
+             <SearchThumb
+              domain="humanities" title="Man w/ red turban" image="img/turban.jpeg"
+              width={256} />
+           </div>
 
            <h2>Video Poster Frames</h2>
+           <p>The poster design for videos looks like this. On the left, we have a composed thumbnail using a
+           fontawesome icon and on the right we have the bare image.</p>
+           <div style={{display: "inline-block", margin: 1}}>
+             <SimpleThumb image="img/descartes.png" width={256}/>
+           </div>
+           <div style={{display: "inline-block", margin: 1}}>
+           <SimpleThumb image="img/descartes-noicon.png" width={256}/>
+            </div>
 
+          <h2>Articles</h2>
+          <h2>Exercises</h2>
         </section>
       </article>
 
@@ -317,6 +367,4 @@ var StyleGuide = React.createClass({
 });
                       // TODO(): articles - words/mins/pages
                       // TODO(): exercises - dots/star
-                      // TODO(): poster frame for video
-                      // TODO(): final dimensions
                       // TODO(): example of thumbs in context

@@ -4,6 +4,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova-condensed",  sans-serif;
   font-weight: normal;
 }
+h1 {
+  font-size: 45px;
+}
+h2 {
+  font-size: 30px;
+}
 body {
   font: 16px/22px helvetica;
 }
