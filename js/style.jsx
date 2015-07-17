@@ -58,13 +58,24 @@ var FuzzyThumb = React.createClass({
     image: React.PropTypes.string,
     width: React.PropTypes.number,
     buttonSize: React.PropTypes.number,
-    colorOverlay: React.PropTypes.string
+    domain: React.PropTypes.oneOf([
+      "math", "science", "economics", "humanities", "test-prep", "cs", "partner-content", "default" ])
   },
   getDefaultProps: function(){
     return {
       branded: false,
       width: 160
     };
+  },
+  colors: {
+    "math": "#58c4dd", // math topic
+    "science": "#c55f73", // science topic
+    "cs": "#76b056", // green 4
+    "test-prep": "#b189c6", // purple 4
+    "humanities": "#f16257", // red 5
+    "default": "#46a592", // teal 4
+    "partner-content": "#46a592", // teal 4
+    "economics": "#d2923d" // econ topic
   },
   render: function(){
     var buttonSize = this.props.buttonSize || this.props.width * .2;
@@ -98,6 +109,11 @@ var FuzzyThumb = React.createClass({
       transform: "translate(" + (-1 * offsetLeft) + "px, " + (-1 * offsetTop) + "px)",
       "-webkit-filter": "blur(10px)"
     };
+
+    if (this.props.domain) {
+      blur.backgroundBlendMode = "multiply, normal";
+      blur.backgroundColor = this.colors[this.props.domain];
+    }
 
     return (
       <div style={containerStyle}>
@@ -414,7 +430,8 @@ var StyleGuide = React.createClass({
            <SimpleThumb image="img/descartes-noicon.png" width={256}/>
            </div>
            <FuzzyThumb image="img/turban.jpeg" />
-           <FuzzyThumb image="img/turban.jpeg" width={512} />
+           <FuzzyThumb image="img/turban.jpeg" width={256} />
+           <FuzzyThumb image="img/turban.jpeg" width={256} domain="humanities" />
 
           <h2>Articles</h2>
           <h2>Exercises</h2>
