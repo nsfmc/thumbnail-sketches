@@ -3,6 +3,41 @@
 // style.js -- style guide nonsense
 "use strict";
 
+// stolen from mdn
+if (!Object.assign) {
+  Object.defineProperty(Object, 'assign', {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(target) {
+      'use strict';
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert first argument to object');
+      }
+
+      var to = Object(target);
+      for (var i = 1; i < arguments.length; i++) {
+        var nextSource = arguments[i];
+        if (nextSource === undefined || nextSource === null) {
+          continue;
+        }
+        nextSource = Object(nextSource);
+
+        var keysArray = Object.keys(Object(nextSource));
+        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+          var nextKey = keysArray[nextIndex];
+          var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+          if (desc !== undefined && desc.enumerable) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+      return to;
+    }
+  });
+}
+
+
 // stolen from underscore.js
 var shuffle = function(set) {
   var length = set.length;
@@ -68,11 +103,11 @@ var FuzzyThumb = React.createClass({
     };
   },
   colors: {
-    "math": "#58c4dd", // math topic
+    "math": "#29abca", // math 2 subject
     "science": "#c55f73", // science topic
     "cs": "#76b056", // green 4
     "test-prep": "#b189c6", // purple 4
-    "humanities": "#f16257", // red 5
+    "humanities": "#c13b32", // red 2
     "default": "#46a592", // teal 4
     "partner-content": "#46a592", // teal 4
     "economics": "#d2923d" // econ topic
@@ -98,7 +133,7 @@ var FuzzyThumb = React.createClass({
       height: buttonSize,
       borderRadius: "100%",
       overflow: "hidden",
-      transform: "translate(" + offsetLeft + "px, " + offsetTop + "px)"
+      transform: "translate(" + offsetLeft + "px, " + offsetTop + "px)",
     };
     var blur = {
       width: containerStyle.width,
@@ -107,18 +142,26 @@ var FuzzyThumb = React.createClass({
       backgroundSize: "cover",
       backgroundPosition: "50% 50%",
       transform: "translate(" + (-1 * offsetLeft) + "px, " + (-1 * offsetTop) + "px)",
-      "-webkit-filter": "blur(10px)"
+      WebkitFilter: "blur(5px)",
+    };
+    var overlay = {
+      width: "100%",
+      height: "100%",
+      opacity: 0.6
     };
 
     if (this.props.domain) {
-      blur.backgroundBlendMode = "multiply, normal";
-      blur.backgroundColor = this.colors[this.props.domain];
+
+      overlay.backgroundBlendMode = "overlay, normal";
+      overlay.backgroundColor = this.colors[this.props.domain];
     }
 
     return (
       <div style={containerStyle}>
         <div style={clipStyle}>
-          <div style={blur}></div>
+          <div style={blur}>
+            <div style={overlay}></div>
+          </div>
         </div>
       </div>
     );
@@ -246,10 +289,12 @@ var DomainOverlay = React.createClass({
     "economics": "#d2923d" // econ topic
   },
   getInitialState: function(){
-    return {imageData: false}
+    return {imageData: false};
   },
-  componentDidMount: function(){
-    if (this.props.image) {
+  renderImage: function(){
+    // only attempt rendering image if no imageData exists and
+    // if an image was sent to this component
+    if (this.props.image && !this.state.imageData) {
       var that = this;
       var overlay = React.findDOMNode(this.refs.overlayImg);
       Caman(overlay, function(){
@@ -259,8 +304,18 @@ var DomainOverlay = React.createClass({
             that.setState({imageData: this.canvas.toDataURL()});
           });
       });
-
     }
+  },
+  componentDidMount: function(){
+    // render after the img has been loaded once
+    this.renderImage();
+  },
+  componentWillReceiveProps: function() {
+    this.setState({"imageData": false});
+  },
+  componentDidUpdate: function(){
+    // attempt rerendering image data if we get an update
+    this.renderImage();
   },
   render: function(){
     var overlayStyle = {
@@ -291,7 +346,71 @@ var DomainOverlay = React.createClass({
 
     return (
       <div style={overlayStyle}>
-        {!this.state.imageData && this.props.image && <img style={hiddenImage} ref="overlayImg" src={this.props.image} /> }
+        {!this.state.imageData &&
+          this.props.image && <img style={hiddenImage} ref="overlayImg" src={this.props.image} /> }
+      </div>
+    );
+  }
+});
+
+var ManyOf = React.createClass({
+  propTypes: {
+    randomString: React.PropTypes.string,
+    count: React.PropTypes.number,
+    type: React.PropTypes.string,
+    childProps: React.PropTypes.object,
+    spin: React.PropTypes.array // keys in childProps to shuffle on each instance
+  },
+  spinProps: function(){
+    // randomize props marked in the spin array
+    var shuffledProps = {};
+    if (this.props.spin) {
+      for (var i = 0; i < this.props.spin.length; i += 1){
+        var key = this.props.spin[i];
+        shuffledProps[key] = [];
+        while (shuffledProps[key].length < this.props.count){
+          // if you have less choices than number of iterations, then
+          // continue to add shuffled versions of those choices so that
+          // the every n are pleasantly random
+          shuffledProps[key] = shuffledProps[key].concat(shuffle(this.props.childProps[key]));
+        }
+      }
+    }
+    return shuffledProps;
+  },
+  rerender: function(){
+    this.forceUpdate(function(){console.log('huh')});
+  },
+  render: function(){
+    var containerStyle = {display: "inline-block", margin: 1 };
+    var total = this.props.count;
+    var that = this;
+    var passThroughProps = Object.assign({}, this.props.childProps || {});
+    var shuffledProps = this.spinProps();
+
+    var components = range(total).map(function(el, idx, arr) {
+      if (that.props.randomString) {
+        passThroughProps.title = shuffle(that.props.randomString.split(" ")).join(" ");
+      }
+
+      if (that.props.spin) {
+        // cycle through the spun child props
+        for (var i = 0; i < that.props.spin.length; i += 1){
+          var key = that.props.spin[i];
+          passThroughProps[key] = shuffledProps[key][idx % shuffledProps[key].length];
+        }
+      }
+      return (
+        <div style={containerStyle} >
+          {React.createElement(window[that.props.type], passThroughProps)}
+        </div>
+      );
+    });
+
+    return (
+      <div>
+        {components}
+        <button onClick={this.rerender}>shuffle!</button>
       </div>
     );
   }
@@ -314,38 +433,33 @@ var StyleGuide = React.createClass({
           and also some recommendations for people implementing the thumbnails.</p>
           <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
           no images at all, this is what you'd see before we had generated a thumbnail.</p>
-          {shuffle(domains).map(function(e){
-            var phrase = "some very long title taking three lines";
-            var rearranged = shuffle(phrase.split(" ")).join(" ");
-            return (
-            <div style={{display: "inline-block", margin: 1 }}>
-              <SearchThumb title={rearranged} domain={e} />
-            </div>
-          ); })}
+
+          <ManyOf type="SearchThumb" count={8}
+            randomString="some very long title taking three lines"
+            childProps={{domain: domains}}
+            spin={['domain']}
+            />
 
           <p>We also have thumbnails that we present externally in spots like google search results or on youtube.
            they look like this.</p>
-           {shuffle(domains).map(function(e){
-             var phrase = "an upsetting number of pancakes";
-             var rearranged = shuffle(phrase.split(" ")).join(" ");
-
-             return (
-             <div style={{display: "inline-block", margin: 1 }}>
-               <SearchThumb title={rearranged} branded domain={e} titleProps={{width: 110}} />
-             </div>
-           ); })}
+           <ManyOf type="SearchThumb" count={8}
+             randomString="an upsetting number of pancakes"
+             childProps={{domain: domains, branded: true}}
+             spin={['domain']}
+             />
 
            <p>We can also support a thumbnail with an image (this is <em>actually</em> the default).</p>
-           {shuffle(domains).map(function(e){
-             var phrase = "there all is aching";
-             var rearranged = shuffle(phrase.split(" ")).join(" ");
-             var imagePrefix = "img/arthistorythumbs/arthistory";
-             var imageSuffix = shuffle([".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg"])[0];
-             return (
-             <div style={{display: "inline-block", margin: 1 }}>
-               <SearchThumb title={rearranged} branded domain={e} image={imagePrefix + imageSuffix}/>
-             </div>
-           ); })}
+           <ManyOf type="SearchThumb" count={8}
+             randomString="there all is aching"
+             childProps={{
+              domain: domains,
+              branded: true,
+              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg"].map(function(e){
+                return "img/arthistorythumbs/arthistory" + e; })
+              }}
+             spin={["domain", "image"]}
+             />
+
            <p>For the images, we desaturate them 15% and then adjust their curves so that they fall
            mostly in a grey zone of lightness. the curve here is just two points: <code>[0, 80], [255, 170]</code>
            and the color itself is mixed with the image using the <em>multiply</em> blend mode.</p>
@@ -424,14 +538,20 @@ var StyleGuide = React.createClass({
            <p>The poster design for videos looks like this. On the left, we have a composed thumbnail using a
            fontawesome icon and on the right we have the bare image.</p>
            <div style={{display: "inline-block", margin: 1}}>
-             <SimpleThumb image="img/descartes.png" width={256}/>
+             <SimpleThumb image="img/descartes.png" />
            </div>
            <div style={{display: "inline-block", margin: 1}}>
-           <SimpleThumb image="img/descartes-noicon.png" width={256}/>
+           <SimpleThumb image="img/blank-descartes.png" />
            </div>
+           <div style={{display: "inline-block", margin: 1}}>
+           <FuzzyThumb image="img/blank-descartes.png" />
+           </div>
+           <div style={{display: "inline-block", margin: 1}}>
+           <FuzzyThumb image="img/blank-descartes.png" domain="math" />
+           </div>
+
            <FuzzyThumb image="img/turban.jpeg" />
-           <FuzzyThumb image="img/turban.jpeg" width={256} />
-           <FuzzyThumb image="img/turban.jpeg" width={256} domain="humanities" />
+           <FuzzyThumb image="img/turban.jpeg" domain="humanities" />
 
           <h2>Articles</h2>
           <h2>Exercises</h2>
