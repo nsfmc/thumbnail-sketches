@@ -546,7 +546,7 @@ var StyleGuide = React.createClass({
           <SimpleThumb image="img/func-good.png" />
           <p>This thumbnail's focus is unambiguous, the meaning is 100% clear and yet it is a graphic that never once appears in the video.
           Its colors have been saturated slightly and the diagram has itself been modified to maximally fit within the 16 &times; 9 ratio of
-          the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.
+          the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.</p>
 
 
           <h2>Thumbnail Specs</h2>
