@@ -567,7 +567,7 @@ var StyleGuide = React.createClass({
           thumbnail. Ask yourself how brief you can be, what of the video's title needs to remain, which articles are
           excessive, which clauses are simply not needed. </p>
           <p>Learners will look at this title, as brief as it is, for guidance and its wording will strongly influence how
-          easily a video is discovered both on our site and externally.
+          easily a video is discovered both on our site and externally.</p>
 
           <h2>Thumbnail Specs</h2>
 
