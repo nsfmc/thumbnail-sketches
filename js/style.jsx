@@ -499,7 +499,7 @@ var StyleGuide = React.createClass({
           <p>How will you know if it meets these bars? Here's an easy checklist for you:</p>
           <TigerBeatQuiz questions={[
             "it has a single focal point",
-            "it is legible at 160 &times; 90",
+            "it is legible at 160 × 90px",
             "it might plausibly be recognize by a student not familiar with the topic",
             "if a diagram, possibly language agnostic",
             "can be disambiguated from its siblings in the same tutorial",
@@ -518,7 +518,7 @@ var StyleGuide = React.createClass({
           </div>
           <p>Does this image of descartes qualify?</p>
           <p>Well, if the video is about Rene Descartes, then yes! It has a single focal point (his eyes/face),
-          it is legible at 160 &times 90,
+          it is legible at 160 &times; 90,
           it could be identified as "somebody from the past" by a student unfamiliar with descartes,
           it is 100% language agnostic, presumably the adjacent videos are not about him directly,
           and as a photo, it has a pleasing dynamic range (his hair is nearly black, his forehead is nearly white, much
