@@ -410,7 +410,7 @@ var ManyOf = React.createClass({
     return (
       <div>
         {components}
-        <button onClick={this.rerender}>shuffle!</button>
+        <br /><button onClick={this.rerender}>shuffle!</button>
       </div>
     );
   }
@@ -469,15 +469,14 @@ var StyleGuide = React.createClass({
            <p>On the site and mobile devices, because we have metadata available and better text rendering at native
            point sizes, for search results, we may omit the force-burned text and istead have just the saturated
            image, as below, opting to add titles or content icons as needed.</p>
-           {shuffle([".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"]).slice(0, 8).map(function(suffix){
-             var imagePrefix = "img/maththumbs/math";
-             return (
-             <div style={{display: "inline-block", margin: 1 }}>
-               <SearchThumb domain="math" image={imagePrefix + suffix}/>
-             </div>
-           ); })}
-
-
+           <ManyOf type="SearchThumb" count={8}
+             childProps={{
+              domain: "math",
+              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
+                return "img/maththumbs/math" + e; })
+              }}
+             spin={["image"]}
+             />
 
            <h2>Colors</h2>
            <p>the thumbnails <em>mostly</em> use topic colors for a given domain. Currently, they're given as:</p>
