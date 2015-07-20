@@ -296,7 +296,7 @@ var DomainOverlay = React.createClass({
     "economics": "#d2923d" // econ topic
   },
   getInitialState: function(){
-    return {imageData: false};
+    return { imageData: false };
   },
   renderImage: function(){
     // only attempt rendering image if no imageData exists and
@@ -314,11 +314,20 @@ var DomainOverlay = React.createClass({
     }
   },
   componentDidMount: function(){
-    // render after the img has been loaded once
+    // render after the img has been mounted the first time
     this.renderImage();
   },
-  componentWillReceiveProps: function() {
-    this.setState({"imageData": false});
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.image !== this.props.image){
+      this.setState({"imageData": false});
+    }
+  },
+  shouldComponentUpdate: function(nextProps, nextState){
+    var imageLocationChanged = this.props.image !== nextProps.image;
+    var imageDataChanged = this.state.imageData !== nextState.imageData;
+    var imageMismatch = imageLocationChanged || imageDataChanged;
+
+    return imageMismatch;
   },
   componentDidUpdate: function(){
     // attempt rerendering image data if we get an update
@@ -386,7 +395,7 @@ var ManyOf = React.createClass({
     return shuffledProps;
   },
   rerender: function(){
-    this.forceUpdate(function(){console.log('huh')});
+    this.forceUpdate();
   },
   render: function(){
     var containerStyle = {display: "inline-block", margin: 1 };
@@ -394,8 +403,9 @@ var ManyOf = React.createClass({
     var that = this;
     var passThroughProps = Object.assign({}, this.props.childProps || {});
     var shuffledProps = this.spinProps();
+    var Thing = React.createFactory(this.props.type);
 
-    var components = range(total).map(function(el, idx, arr) {
+    var components = range(total).map(function(el, idx) {
       if (that.props.randomString) {
         passThroughProps.title = shuffle(that.props.randomString.split(" ")).join(" ");
       }
@@ -409,7 +419,7 @@ var ManyOf = React.createClass({
       }
       return (
         <div style={containerStyle} >
-          {React.createElement(window[that.props.type], passThroughProps)}
+          {Thing(passThroughProps)}
         </div>
       );
     });
@@ -456,7 +466,7 @@ var TigerBeatQuiz = React.createClass({
     var score = this.getMax();
     var ulStyle = {paddingLeft: 0};
     var liStyle = {listStyleType: "none", fontFamily: "proxima-nova-condensed", fontSize: "13px"};
-    var resultStyle = {borderTop: "1px solid #ddd" ,fontFamily: "proxima-nova-condensed", fontSize: "12px", marginLeft: "10"};
+    var resultStyle = {borderTop: "1px solid #ddd" , fontFamily: "proxima-nova-condensed", fontSize: "12px", marginLeft: "10"};
     if (score[2]) { resultStyle.color = score[2]; };
     var that = this;
     return (
@@ -474,6 +484,71 @@ var TigerBeatQuiz = React.createClass({
       </div>
     );
   }
+});
+
+
+var Parameterizer = React.createClass({
+  propTypes: {},
+  update: function(field, e) {
+    switch (field){
+      case "title":
+        this.setState({'title': e.target.value});
+        break;
+      case "size":
+        var fontSize = parseInt(e.target.value, 10) || 13;
+        this.setState({fontSize: fontSize});
+        break;
+      case "width":
+        var width = parseInt(e.target.value, 10) || 100;
+        this.setState({width: width});
+        break;
+    }
+  },
+  getInitialState: function(){
+    return {
+      "title": "oh hi",
+      "fontSize": 13,
+      "width": 100
+    };
+  },
+  render: function(){
+    var newElements = React.Children.map(this.props.children, function(child){
+      var updated = {
+        "title": this.state.title,
+        "titleProps":{
+          "fontSize": this.state.fontSize,
+          "width": this.state.width
+        }
+      };
+      return React.cloneElement(child, updated);
+    }.bind(this));
+    var labelStyle = {
+      fontSize: 13,
+      fontFamily: "proxima-nova-condensed",
+    };
+    var pStyle = {
+      margin: ".25em 0",
+      width: "400px",
+    };
+    return (
+      <div>
+        <div style={{display: "inline-block"}}>
+        {newElements}
+        </div>
+        <div style={{display: "inline-block", marginLeft: "20px", verticalAlign: "top"}}>
+          <p style={pStyle}><label style={labelStyle}>new
+          title <input onChange={this.update.bind(this, "title")} type="text"
+            placeholder="suggested title" /></label></p>
+          <p style={pStyle}><label style={labelStyle}>new font
+          size <input onChange={this.update.bind(this, "size")} type="text"
+            placeholder="number between 11-17" /></label></p>
+          <p style={pStyle}><label style={labelStyle}>new
+          width <input onChange={this.update.bind(this, "width")} type="text"
+            placeholder="a number < 160"/></label></p>
+        </div>
+      </div>
+    );
+  },
 });
 
 // first set the whole line at the optimal size, measure text.
@@ -537,16 +612,20 @@ var StyleGuide = React.createClass({
           <p>And even then, it's worth asking: <em>is this as good as it can get?</em></p>
 
           <p>Behold this simple thumbnail, a screenshot of the video
-            <a href="https://www.khanacademy.org/math/algebra2/functions_and_graphs/function-introduction/v/what-is-a-function">what is a function</a>.
+            <a href="https://www.khanacademy.org/math/algebra2/functions_and_graphs/function-introduction/v/what-is-a-function">
+            what is a function</a>.
           As a thumbnail, it conveys one of the core statements from the video:
             <em> input&nbsp;&rarr;&nbsp;function&nbsp;&rarr;&nbsp;output</em>
           </p>
           <SimpleThumb image="img/func-meh.png" />
-          <p>According to the checklist above, it should be pretty good to go, right? But again, ask yourself: <em>could it be better?</em></p>
+          <p>According to the checklist above, it should be pretty good to go, right? But again, ask
+          yourself: <em>could it be better?</em></p>
           <SimpleThumb image="img/func-good.png" />
-          <p>This thumbnail's focus is unambiguous, the meaning is 100% clear and yet it is a graphic that never once appears in the video.
-          Its colors have been saturated slightly and the diagram has itself been modified to maximally fit within the 16 &times; 9 ratio of
-          the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.</p>
+          <p>This thumbnail's focus is unambiguous, the meaning is 100% clear and yet it is a graphic
+          that never once appears in the video.
+          Its colors have been saturated slightly and the diagram has itself been modified to maximally
+          fit within the 16 &times; 9 ratio of
+          the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? yes.</p>
 
           <p><strong>Thumbnails should communicate as much as possible to a student just getting started on a topic.</strong></p>
 
@@ -568,13 +647,19 @@ var StyleGuide = React.createClass({
           excessive, which clauses are simply not needed. </p>
           <p>Learners will look at this title, as brief as it is, for guidance and its wording will strongly influence how
           easily a video is discovered both on our site and externally.</p>
+          <p>Play around with the little widget below to get a sense for the limitations of the text and
+          font sizing in your thumbnails.</p>
+
+          <Parameterizer>
+            <SearchThumb image="img/func-good.png" domain="math" title="getting started with algebraic functions" />
+          </Parameterizer>
 
           <h2>Thumbnail Specs</h2>
 
           <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
           no images at all, this is what you'd see before we had generated a thumbnail.</p>
 
-          <ManyOf type="SearchThumb" count={8}
+          <ManyOf type={SearchThumb} count={8}
             randomString="some very long title taking three lines"
             childProps={{domain: domains}}
             spin={['domain']}
@@ -582,14 +667,14 @@ var StyleGuide = React.createClass({
 
           <p>We also have thumbnails that we present externally in spots like google search results or on youtube.
            they look like this.</p>
-           <ManyOf type="SearchThumb" count={8}
+           <ManyOf type={SearchThumb} count={8}
              randomString="an upsetting number of pancakes"
              childProps={{domain: domains, branded: true}}
              spin={['domain']}
              />
 
            <p>We can also support a thumbnail with an image (this is <em>actually</em> the default).</p>
-           <ManyOf type="SearchThumb" count={8}
+           <ManyOf type={SearchThumb} count={8}
              randomString="there all is aching"
              childProps={{
               domain: domains,
@@ -609,7 +694,7 @@ var StyleGuide = React.createClass({
            <p>On the site and mobile devices, because we have metadata available and better text rendering at native
            point sizes, for search results, we may omit the force-burned text and istead have just the saturated
            image, as below, opting to add titles or content icons as needed.</p>
-           <ManyOf type="SearchThumb" count={8}
+           <ManyOf type={SearchThumb} count={8}
              childProps={{
               domain: "math",
               image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
@@ -646,13 +731,17 @@ var StyleGuide = React.createClass({
              <SearchThumb domain="science" title="Red Balloon" titleProps={{fontSize: 19, width: 110}} />
            </div>
            <div style={{display: "inline-block", margin: 1}} title="titleProps={{fontSize: 12, width: 110}}">
-             <SearchThumb domain="cs" title="Weekly topics in linear algebra (affine transforms)" titleProps={{fontSize: 12, width: 110}} />
+             <SearchThumb domain="cs"
+                title="Weekly topics in linear algebra (affine transforms)"
+                titleProps={{fontSize: 12, width: 110}} />
            </div>
 
            <h2>Thumb Sizes</h2>
-           <p>Although all the thumbs here have been 160 &times; 90, thumbnails exist in <a href="https://app.asana.com/0/36838877178178/37010952767376">a variety of sizes</a> in
+           <p>Although all the thumbs here have been 160 &times; 90, thumbnails exist
+           in <a href="https://app.asana.com/0/36838877178178/37010952767376">a variety of sizes</a> in
            the world, not to mention our site.</p>
-           <p>For simplicity, we generate a 1280 &times; 720 (<em>720p</em>) that we send to youtube, but we also support on tutorial pages, thumbnails of size 256 &times; 144</p>
+           <p>For simplicity, we generate a 1280 &times; 720 (<em>720p</em>) that we send to youtube,
+           but we also support on tutorial pages, thumbnails of size 256 &times; 144</p>
 
            <div style={{display: "inline-block", margin: 1}}>
              <SearchThumb
