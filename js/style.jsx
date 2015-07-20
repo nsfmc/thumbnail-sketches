@@ -536,6 +536,18 @@ var StyleGuide = React.createClass({
           </div>
           <p>And even then, it's worth asking: <em>is this as good as it can get?</em></p>
 
+          <p>Behold this simple thumbnail, a screenshot of the video
+            <a href="https://www.khanacademy.org/math/algebra2/functions_and_graphs/function-introduction/v/what-is-a-function">what is a function</a>.
+          As a thumbnail, it conveys one of the core statements from the video:
+            <em>input &rarr; function &rarr; output</em>
+          </p>
+          <SimpleThumb image="img/func-meh.png" />
+          <p>According to the checklist above, it should be pretty good to go, right? But again, ask yourself: <em>could it be better?</em></p>
+          <SimpleThumb image="img/func-good.png" />
+          <p>This thumbnail's focus is unambiguous, the meaning is 100% clear and yet it is a graphic that never once appears in the video.
+          Its colors have been saturated slightly and the diagram has itself been modified to maximally fit within the 16 &times; 9 ratio of
+          the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.
+
 
           <h2>Thumbnail Specs</h2>
 
