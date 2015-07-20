@@ -539,7 +539,7 @@ var StyleGuide = React.createClass({
           <p>Behold this simple thumbnail, a screenshot of the video
             <a href="https://www.khanacademy.org/math/algebra2/functions_and_graphs/function-introduction/v/what-is-a-function">what is a function</a>.
           As a thumbnail, it conveys one of the core statements from the video:
-            <em>input &rarr; function &rarr; output</em>
+            <em> input&nbsp;&rarr;&nbsp;function&nbsp;&rarr;&nbsp;output</em>
           </p>
           <SimpleThumb image="img/func-meh.png" />
           <p>According to the checklist above, it should be pretty good to go, right? But again, ask yourself: <em>could it be better?</em></p>
@@ -549,6 +549,25 @@ var StyleGuide = React.createClass({
           the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.</p>
 
           <p><strong>Thumbnails should communicate as much as possible to a student just getting started on a topic.</strong></p>
+
+          <h2>Picking titles</h2>
+          <p>The space avalaible to you, the content creator, when choosing a thumbnail, is quite constrained.
+          At best, you are likely to have three lines of ~16 characters available to you when choosing a thumbnail.
+          This corresponds roughly to three lines of three moderate sized words.</p>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SearchThumb image="img/func-good.png" domain="math" titleProps={{fontSize: 16}} title="what is a function?" />
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SearchThumb image="img/func-good.png" domain="math" titleProps={{}} title="an intro to functions in algebra" />
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SearchThumb image="img/func-good.png" domain="math" titleProps={{}} title="getting started with algebraic functions" />
+          </div>
+          <p>However as you think about your videos, don't simply try to maximize the number of words you cram into the
+          thumbnail. Ask yourself how brief you can be, what of the video's title needs to remain, which articles are
+          excessive, which clauses are simply not needed. </p>
+          <p>Learners will look at this title, as brief as it is, for guidance and its wording will strongly influence how
+          easily a video is discovered both on our site and externally.
 
           <h2>Thumbnail Specs</h2>
 
