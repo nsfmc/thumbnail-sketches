@@ -416,6 +416,59 @@ var ManyOf = React.createClass({
   }
 });
 
+var TigerBeatQuiz = React.createClass({
+  // a simple yep/nope tigerbeat-style quiz
+  propTypes: {
+    questions: React.PropTypes.array,
+    // expect ["you enjoyed the green lantern",
+    //         "you can tolerate ryan reynolds", ...]
+    thresholds: React.PropTypes.array
+    // [ [0, "you will be doomed to an eternity with sinestro"],
+    //   [3, "you might go on a ridealong with green lantern"],
+    //   [5, "you will star in a buddy cop procedural with kilowog"]];
+  },
+  getInitialState: function(){
+    return {tally: 0};
+  },
+  respond: function(evt){
+    var amount = evt.target.checked ? 1 : -1;
+    this.setState({tally: (this.state.tally + amount) });
+  },
+  getMax: function(){
+    var sorted = this.props.thresholds.sort(function(a, b){return a[0]-b[0]});
+    var output = false;
+    var i = 0; // zzzzzomg gross
+    while (i < sorted.length && this.state.tally >= sorted[i][0]){
+      i += 1;
+    }
+    if (i > 0) { output = sorted[i - 1]}
+
+    return output;
+  },
+  render: function(){
+    var score = this.getMax();
+    var ulStyle = {paddingLeft: 0};
+    var liStyle = {listStyleType: "none", fontFamily: "proxima-nova-condensed", fontSize: "13px"};
+    var resultStyle = {borderTop: "1px solid #ddd" ,fontFamily: "proxima-nova-condensed", fontSize: "12px", marginLeft: "10"};
+    if (score[2]) { resultStyle.color = score[2]; };
+    var that = this;
+    return (
+      <div style={{borderLeft: "2px solid #ddd", paddingLeft: "5px", marginLeft: "2px"}}>
+      <ul style={ulStyle}>
+        {this.props.questions.map(function(el, idx){
+          return (
+            <li key={idx + el.slice(0,5)} style={liStyle}>
+              <label><input onChange={that.respond} type="checkbox" />{el}</label>
+            </li>
+          );
+        })}
+      </ul>
+      <p style={resultStyle}>&#9758; {score[1] || ""}</p>
+      </div>
+    );
+  }
+});
+
 // first set the whole line at the optimal size, measure text.
 // if the whole line is too long, break in two at
 // 55% or so. measure the resultant parent block.
@@ -429,8 +482,29 @@ var StyleGuide = React.createClass({
       <article>
         <h1>Thumbnail Style Guide</h1>
         <section>
-          <p>This is the style guide for video thumbnails, it talks a bit about how we got here
-          and also some recommendations for people implementing the thumbnails.</p>
+          <p>This is the style guide for video thumbnails, it talks a bit about how we got here, a bit about how
+          you can design and choose successful copy/images for your thumbs as well as
+          recommendations for people implementing the thumbnails.</p>
+
+          <h2>Choosing Images</h2>
+          <p>Before we treat a thumbnail, the image you choose should stand on its own. The image should
+          be captivating and, if possible, representative of the video/exercise/article/etc's content.</p>
+
+          <p>How will you know if it meets these bars? Here's an easy checklist for you:</p>
+          <TigerBeatQuiz questions={[
+            "it has a single focal point",
+            "it is legible at 160x90",
+            "it might plausibly be recognize by a student not familiar with the topic",
+            "if a diagram, possibly language agnostic",
+            "can be disambiguated from its siblings in the same tutorial",
+            "if photo, has a pleasing dynamic range (not too grey, not too bright)",
+            ]}
+            thresholds={[
+              [0, "your thumbnail probably needs work", "#722"],
+              [3, "maybe good enough? ask a friend!"],
+              [5, "shipit!"]]}
+          />
+
           <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
           no images at all, this is what you'd see before we had generated a thumbnail.</p>
 
