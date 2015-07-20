@@ -74,6 +74,7 @@ var SimpleThumb = React.createClass({
       position: "relative",
       backgroundImage: "url(" + this.props.image +")",
       backgroundSize: "cover",
+      backgroundPosition: "center center",
       borderRadius: "2.5px",
       backgroundClip: "padding-box",
       overflow: "hidden"
@@ -656,15 +657,24 @@ var StyleGuide = React.createClass({
            <FuzzyThumb image="img/blank-descartes.png" domain="math" />
            </div>
 
-           <FuzzyThumb image="img/turban.jpeg" />
-           <FuzzyThumb image="img/turban.jpeg" domain="humanities" />
-
-           // TODO(articles)
-           // TODO(exercises)
-           // TODO(thumbs in context)
+          <div style={{display: "inline-block", margin: 1}}>
+            <SimpleThumb image="img/turban.jpeg" />
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <FuzzyThumb image="img/turban.jpeg" />
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <FuzzyThumb image="img/turban.jpeg" domain="humanities" />
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SearchThumb image="img/turban.jpeg" domain="humanities" />
+          </div>
         </section>
       </article>
 
     );
   }
 });
+// TODO(articles)
+// TODO(exercises)
+// TODO(thumbs in context)
