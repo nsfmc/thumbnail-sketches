@@ -78,9 +78,15 @@ var SimpleThumb = React.createClass({
       backgroundClip: "padding-box",
       overflow: "hidden"
     };
+    var titleProps = this.props.titleProps || {};
+    titleProps.width = titleProps.width || (.625 * this.props.width);
+    titleProps.height = titleProps.height || containerStyle.height;
+    titleProps.fontSize = titleProps.fontSize || (this.props.width / 160 * 13);
+    titleProps.paddingLeft = titleProps.paddingLeft || ((this.props.width - titleProps.width) / 2);
 
     return (
       <div style={containerStyle} className="search-thumb">
+        <TitleBox title={this.props.title} {...titleProps} />
         {this.props.branded && <KAOverlay /> }
       </div>
     );
@@ -493,7 +499,7 @@ var StyleGuide = React.createClass({
           <p>How will you know if it meets these bars? Here's an easy checklist for you:</p>
           <TigerBeatQuiz questions={[
             "it has a single focal point",
-            "it is legible at 160x90",
+            "it is legible at 160 &times; 90",
             "it might plausibly be recognize by a student not familiar with the topic",
             "if a diagram, possibly language agnostic",
             "can be disambiguated from its siblings in the same tutorial",
@@ -504,6 +510,33 @@ var StyleGuide = React.createClass({
               [3, "maybe good enough? ask a friend!"],
               [5, "shipit!"]]}
           />
+
+          <p>But because a checklist can be something of an inexact science, let's look at some images for context.</p>
+
+          <div style={{display: "inline-block", margin: 1}}>
+            <SimpleThumb image="img/blank-descartes.png" />
+          </div>
+          <p>Does this image of descartes qualify?</p>
+          <p>Well, if the video is about Rene Descartes, then yes! It has a single focal point (his eyes/face),
+          it is legible at 160 &times 90,
+          it could be identified as "somebody from the past" by a student unfamiliar with descartes,
+          it is 100% language agnostic, presumably the adjacent videos are not about him directly,
+          and as a photo, it has a pleasing dynamic range (his hair is nearly black, his forehead is nearly white, much
+            of the image is somewhere between that).</p>
+          <p>It's worth saying that simply choosing a dominant subject is not what is likely to make a good thumb.
+          For example, on the left, you'll see a dominant subject, a good dynamic range but <em>absolutely zero context. </em>
+          On the right, we have something better, assuming this is a video about, say looking at rothkos and <em>not</em> a
+          video about the unexpected post-war rise of converse chuck taylors.</p>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SimpleThumb image="img/badthumb.png" title="not so good"/>
+          </div>
+          <div style={{display: "inline-block", margin: 1}}>
+            <SimpleThumb image="img/betterthumb.png" title="getting there!"/>
+          </div>
+          <p>And even then, it's worth asking: <em>is this as good as it can get?</em></p>
+
+
+          <h2>Thumbnail Specs</h2>
 
           <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
           no images at all, this is what you'd see before we had generated a thumbnail.</p>
@@ -626,14 +659,12 @@ var StyleGuide = React.createClass({
            <FuzzyThumb image="img/turban.jpeg" />
            <FuzzyThumb image="img/turban.jpeg" domain="humanities" />
 
-          <h2>Articles</h2>
-          <h2>Exercises</h2>
+           // TODO(articles)
+           // TODO(exercises)
+           // TODO(thumbs in context)
         </section>
       </article>
 
     );
   }
 });
-                      // TODO(): articles - words/mins/pages
-                      // TODO(): exercises - dots/star
-                      // TODO(): example of thumbs in context

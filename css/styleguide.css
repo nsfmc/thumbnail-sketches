@@ -19,6 +19,10 @@ body {
 
 article {
   width: 45em;
+  position: relative;
+  margin-top: 3em;
+  left: 50%;
+  margin-left: -22.5em;
 }
 section p {
   width: 35em;
