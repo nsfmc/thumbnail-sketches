@@ -548,6 +548,7 @@ var StyleGuide = React.createClass({
           Its colors have been saturated slightly and the diagram has itself been modified to maximally fit within the 16 &times; 9 ratio of
           the thumbnails. Is it an accurate image of what's in the video? no. but is it a better image? i argue yes.</p>
 
+          <p><strong>Thumbnails should communicate as much as possible to a student just getting started on a topic.</strong></p>
 
           <h2>Thumbnail Specs</h2>
 
