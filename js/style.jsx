@@ -537,8 +537,17 @@ var Parameterizer = React.createClass({
       fontFamily: 'monaco, courier new, monospace',
       fontSize: 10
     }
+    var controlStyles = {
+      position: "absolute",
+      left: "90%", top: 0,
+      width: 400, height: 100,
+      borderLeft: "1px solid #ccc"
+    }
     return (
-      <div>
+      <div style={{position: "relative", width: "100%"}}>
+        <div style={controlStyles}>
+
+        </div>
         <div style={{display: "inline-block"}} title={titleString}>
         {newElements}
         </div>
@@ -666,7 +675,7 @@ var StyleGuide = React.createClass({
           font sizing in your thumbnails.</p>
 
           <Parameterizer>
-            <SearchThumb image="img/func-good.png" domain="math" title="getting started with algebraic functions" />
+            <SearchThumb image="img/func-good.png" domain="math" title="oh hi" />
           </Parameterizer>
 
           <h2>Thumbnail Specs</h2>
