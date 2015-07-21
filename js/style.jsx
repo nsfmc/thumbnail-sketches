@@ -373,7 +373,7 @@ var ManyOf = React.createClass({
   propTypes: {
     randomString: React.PropTypes.string,
     count: React.PropTypes.number,
-    type: React.PropTypes.string,
+    type: React.PropTypes.element,
     childProps: React.PropTypes.object,
     spin: React.PropTypes.array // keys in childProps to shuffle on each instance
   },
@@ -495,11 +495,11 @@ var Parameterizer = React.createClass({
         this.setState({'title': e.target.value});
         break;
       case "size":
-        var fontSize = parseInt(e.target.value, 10) || 13;
+        var fontSize = (parseInt(e.target.value * 100, 10) / 100) || 13;
         this.setState({fontSize: fontSize});
         break;
       case "width":
-        var width = parseInt(e.target.value, 10) || 100;
+        var width = (parseInt(e.target.value * 100, 10) / 100) || 100;
         this.setState({width: width});
         break;
     }
@@ -522,6 +522,7 @@ var Parameterizer = React.createClass({
       };
       return React.cloneElement(child, updated);
     }.bind(this));
+
     var labelStyle = {
       fontSize: 13,
       fontFamily: "proxima-nova-condensed",
@@ -530,21 +531,35 @@ var Parameterizer = React.createClass({
       margin: ".25em 0",
       width: "400px",
     };
+    var titleString = `<SearchThumb title="${this.state.title}" ` +
+      `titleProps={{fontSize: ${this.state.fontSize}, width: ${this.state.width}}} />`;
+    var outputStyle = {
+      fontFamily: 'monaco, courier new, monospace',
+      fontSize: 10
+    }
     return (
       <div>
-        <div style={{display: "inline-block"}}>
+        <div style={{display: "inline-block"}} title={titleString}>
         {newElements}
         </div>
         <div style={{display: "inline-block", marginLeft: "20px", verticalAlign: "top"}}>
-          <p style={pStyle}><label style={labelStyle}>new
-          title <input onChange={this.update.bind(this, "title")} type="text"
-            placeholder="suggested title" /></label></p>
-          <p style={pStyle}><label style={labelStyle}>new font
-          size <input onChange={this.update.bind(this, "size")} type="text"
-            placeholder="number between 11-17" /></label></p>
-          <p style={pStyle}><label style={labelStyle}>new
-          width <input onChange={this.update.bind(this, "width")} type="text"
-            placeholder="a number < 160"/></label></p>
+          <table>
+            <tr><td><label style={labelStyle}>new title</label></td>
+                <td><input onChange={this.update.bind(this, "title")} type="text"
+            placeholder="suggested title" /></td>
+                <td style={outputStyle}>&nbsp;</td>
+            </tr>
+            <tr><td><label style={labelStyle}>font size</label></td>
+                <td><input onChange={this.update.bind(this, "size")} type="range"
+            min="11" max="25" step="0.05" defaultValue={this.state.fontSize} /></td>
+                <td style={outputStyle}>{this.state.fontSize}</td>
+            </tr>
+            <tr><td><label style={labelStyle}>text width</label></td>
+                <td><input onChange={this.update.bind(this, "width")} type="range"
+            min="70" max="155" defaultValue={this.state.width} /></td>
+                <td style={outputStyle}>{this.state.width}</td>
+            </tr>
+          </table>
         </div>
       </div>
     );
