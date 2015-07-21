@@ -181,7 +181,8 @@ var SearchThumb = React.createClass({
     image: React.PropTypes.string,
     branded: React.PropTypes.bool,
     titleProps: React.PropTypes.object,
-    width: React.PropTypes.number
+    width: React.PropTypes.number,
+    overlayProps: React.PropTypes.object
   },
   getDefaultProps: function(){
     return {
@@ -209,7 +210,7 @@ var SearchThumb = React.createClass({
     return (
       <div style={containerStyle} className="search-thumb">
         <TitleBox title={this.props.title} {...titleProps} />
-        <DomainOverlay domain={this.props.domain} image={this.props.image} />
+        <DomainOverlay domain={this.props.domain} image={this.props.image} {...this.props.overlayProps} />
         {this.props.branded && <KAOverlay /> }
       </div>
     );
@@ -298,6 +299,13 @@ var DomainOverlay = React.createClass({
   getInitialState: function(){
     return { imageData: false };
   },
+  getDefaultProps: function() {
+    return {
+      curves: ["rgb", [0, 80], [0, 80], [255, 170], [255, 170]],
+      saturation: -15,
+      blendMode: "multiply"
+    }
+  },
   renderImage: function(){
     // only attempt rendering image if no imageData exists and
     // if an image was sent to this component
@@ -305,8 +313,8 @@ var DomainOverlay = React.createClass({
       var that = this;
       var overlay = React.findDOMNode(this.refs.overlayImg);
       Caman(overlay, function(){
-        this.curves("rgb", [0, 80], [0, 80], [255, 170], [255, 170])
-          .saturation(-15)
+        this.curves.apply(this, that.props.curves)
+          .saturation(that.props.saturation)
           .render(function(){
             that.setState({imageData: this.canvas.toDataURL()});
           });
@@ -351,7 +359,7 @@ var DomainOverlay = React.createClass({
       if (this.state.imageData) {
         overlayStyle.backgroundImage = "url(" + this.state.imageData + ")";
       }
-      overlayStyle.backgroundBlendMode = "multiply, normal";
+      overlayStyle.backgroundBlendMode = this.props.blendMode;
 
       var hiddenImage = {
         position: "absolute",
@@ -718,14 +726,47 @@ var StyleGuide = React.createClass({
            <p>On the site and mobile devices, because we have metadata available and better text rendering at native
            point sizes, for search results, we may omit the force-burned text and istead have just the saturated
            image, as below, opting to add titles or content icons as needed.</p>
+
            <ManyOf type={SearchThumb} count={8}
              childProps={{
               domain: "math",
               image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
-                return "img/maththumbs/math" + e; })
+                return "img/maththumbs/math" + e; }),
+              overlayProps: {
+              }
+
               }}
              spin={["image"]}
              />
+
+           <h3>A less gloomy multiply/desat</h3>
+           <ManyOf type={SearchThumb} count={8}
+             childProps={{
+              domain: "math",
+              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
+                return "img/maththumbs/math" + e; }),
+              overlayProps: {
+                curves: ["rgb", [0, 22], [0, 22], [255, 200], [255, 200]]
+              }
+              }}
+             spin={["image"]}
+             />
+
+             <h3>hard-light</h3>
+             <p>Here's the thumbnails with a "hard-light" blend mode, with the image having an approximately 10% grey overlay.</p>
+
+             <ManyOf type={SearchThumb} count={8}
+               childProps={{
+                domain: domains,
+                image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
+                  return "img/maththumbs/math" + e; }),
+                overlayProps: {
+                  blendMode: "hard-light",
+                  curves: ["rgb", [0, 22], [0, 22], [255, 200], [255, 200]]
+                }
+                }}
+               spin={["image", "domain"]}
+               />
 
            <h2>Colors</h2>
            <p>the thumbnails <em>mostly</em> use topic colors for a given domain. Currently, they're given as:</p>
