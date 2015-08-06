@@ -595,6 +595,20 @@ var Parameterizer = React.createClass({
   },
 });
 
+var ColorBlock = React.createClass({
+  propTypes: {
+    hex: React.PropTypes.string
+  },
+  render: function() {
+    var colorStyle = { color: this.props.hex };
+    // a colorful fisheye character ◉
+    return (<span>
+      <span style={colorStyle}>&#x25c9;</span>
+      <code> {this.props.hex}</code>
+    </span>);
+  }
+});
+
 // first set the whole line at the optimal size, measure text.
 // if the whole line is too long, break in two at
 // 55% or so. measure the resultant parent block.
@@ -606,7 +620,7 @@ var StyleGuide = React.createClass({
     return (
 
       <article>
-        <h1>Thumbnail Style Guide</h1>
+        <h1 aria-hidden="false" style={{display: "none"}}>Thumbnail Style Guide</h1>
         <section>
           <div title="an external youtube thumbnail" aria-hidden="true">
             <SearchThumb
@@ -755,19 +769,59 @@ var StyleGuide = React.createClass({
 
            <h2>Colors</h2>
            <p>the thumbnails <em>mostly</em> use topic colors for a given domain. Currently, they're given as:</p>
-           <ul>
-            <li>economics: <code>#d2923d</code> // econ topic</li>
-            <li>math: <code>#58c4dd</code>, // math topic </li>
-            <li>science: <code>#c55f73</code>, // science topic </li>
-            <li>cs: <code>#76b056</code>, // green 4 </li>
-            <li>test-prep: <code>#b189c6</code>, // purple 4 </li>
-            <li>humanities: <code>#f16257</code>, // red 5 </li>
-            <li>default: <code>#46a592</code>, // teal 4 </li>
-            <li>partner-content: <code>#46a592</code>, // teal 4 </li>
-          </ul>
+           <table>
+            <tr>
+              <td className='td-right'>economics:</td>
+              <td className='td-left'><ColorBlock hex="#d2923d" />,
+              // econ topic
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>math:</td>
+              <td className='td-left'><ColorBlock hex="#58c4dd" />,
+              // math topic
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>science:</td>
+              <td className='td-left'><ColorBlock hex="#c55f73" />,
+              // science topic
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>cs:</td>
+              <td className='td-left'><ColorBlock hex="#76b056" />,
+              // green 4
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>test-prep:</td>
+              <td className='td-left'><ColorBlock hex="#b189c6" />,
+              // purple 4
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>humanities:</td>
+              <td className='td-left'><ColorBlock hex="#f16257" />,
+              // red 5
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>default:</td>
+              <td className='td-left'><ColorBlock hex="#46a592" />,
+              // teal 4
+              </td>
+            </tr>
+            <tr>
+              <td className='td-right'>partner-content:</td>
+              <td className='td-left'><ColorBlock hex="#46a592" />,
+              // teal 4
+              </td>
+            </tr>
+          </table>
 
            <h2>Type</h2>
-           <p>In general, for a 160x90 thumbnail, the type is <strong>Proxima Nove Condensed - Semibold </strong>
+           <p>In general, for a 160x90 thumbnail, the type is <strong>Proxima Nova Condensed - Semibold </strong>
            set at 13px with 15px leading, but you can vary
            the font size as needed, the leading will update. if you need to break a tough line, you can adjust the
            title's width. The visual look should always be a mostly justified but centered block occupying ~63% of the

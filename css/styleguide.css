@@ -46,3 +46,5 @@ section p a:hover {
 section p a:active {
   color: white;
 }
+
+.td-right { text-align: right; }
