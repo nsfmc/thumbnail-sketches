@@ -57,6 +57,7 @@ var range = function(count) {
   return acc;
 };
 
+// static image with title box
 var SimpleThumb = React.createClass({
   propTypes: {
     image: React.PropTypes.string,
@@ -95,6 +96,7 @@ var SimpleThumb = React.createClass({
   }
 });
 
+// thumbnail with blurred play button
 var FuzzyThumb = React.createClass({
   propTypes: {
     image: React.PropTypes.string,
@@ -175,6 +177,7 @@ var FuzzyThumb = React.createClass({
   }
 });
 
+// thumbnail for youtube
 var SearchThumb = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
@@ -217,7 +220,7 @@ var SearchThumb = React.createClass({
   }
 });
 
-
+// component that renders a vertically centered title
 var TitleBox = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
@@ -254,9 +257,15 @@ var TitleBox = React.createClass({
         </span>
       </div>
     );
+  },
+  componentDidMount: function(){
+    var $this = React.findDOMNode(this);
+    var span = $this.getElementsByTagName("span")[0];
+
   }
 });
 
+// component that renders a khan academy logo overlay
 var KAOverlay = React.createClass({
   render: function(){
     var logoStyle = {
@@ -281,6 +290,7 @@ var KAOverlay = React.createClass({
   }
 });
 
+// an overlay with a muted, multiplied image
 var DomainOverlay = React.createClass({
   propTypes: {
     domain: React.PropTypes.oneOf([
@@ -377,6 +387,7 @@ var DomainOverlay = React.createClass({
   }
 });
 
+// a component that renders many of a single component
 var ManyOf = React.createClass({
   propTypes: {
     randomString: React.PropTypes.string,
@@ -441,6 +452,7 @@ var ManyOf = React.createClass({
   }
 });
 
+// a component for asking stupid questions and
 var TigerBeatQuiz = React.createClass({
   // a simple yep/nope tigerbeat-style quiz
   propTypes: {
@@ -494,7 +506,7 @@ var TigerBeatQuiz = React.createClass({
   }
 });
 
-
+// a component for adjusting the parameters of a search component
 var Parameterizer = React.createClass({
   propTypes: {},
   update: function(field, e) {
@@ -596,6 +608,15 @@ var StyleGuide = React.createClass({
       <article>
         <h1>Thumbnail Style Guide</h1>
         <section>
+          <div title="an external youtube thumbnail" aria-hidden="true">
+            <SearchThumb
+             domain="economics" title="KA Thumbnail Style Guide" image="img/james.jpg"
+             overlayProps={{
+              blendMode: "multiply",
+              curves: ["rgb", [0, 125], [0, 125], [255, 255], [255, 255]]
+             }}
+             width={560} />
+          </div>
           <p>This is the style guide for video thumbnails, it talks a bit about how we got here, a bit about how
           you can design and choose successful copy/images for your thumbs as well as
           recommendations for people implementing the thumbnails.</p>
@@ -686,6 +707,10 @@ var StyleGuide = React.createClass({
             <SearchThumb image="img/func-good.png" domain="math" title="oh hi" />
           </Parameterizer>
 
+          <h3>Title 'design' notes</h3>
+          <p>The type should, as best as possible, form a text-rectangle with the ratio of ~2:3. To get a sense of
+          what this means, observe the following:</p>
+
           <h2>Thumbnail Specs</h2>
 
           <p>This is a basic thumbnail with 16 &times; 9 proportion and a slight 2.5px border radius. If we had
@@ -727,46 +752,6 @@ var StyleGuide = React.createClass({
            point sizes, for search results, we may omit the force-burned text and istead have just the saturated
            image, as below, opting to add titles or content icons as needed.</p>
 
-           <ManyOf type={SearchThumb} count={8}
-             childProps={{
-              domain: "math",
-              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
-                return "img/maththumbs/math" + e; }),
-              overlayProps: {
-              }
-
-              }}
-             spin={["image"]}
-             />
-
-           <h3>A less gloomy multiply/desat</h3>
-           <ManyOf type={SearchThumb} count={8}
-             childProps={{
-              domain: "math",
-              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
-                return "img/maththumbs/math" + e; }),
-              overlayProps: {
-                curves: ["rgb", [0, 22], [0, 22], [255, 200], [255, 200]]
-              }
-              }}
-             spin={["image"]}
-             />
-
-             <h3>hard-light</h3>
-             <p>Here's the thumbnails with a "hard-light" blend mode, with the image having an approximately 10% grey overlay.</p>
-
-             <ManyOf type={SearchThumb} count={8}
-               childProps={{
-                domain: domains,
-                image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
-                  return "img/maththumbs/math" + e; }),
-                overlayProps: {
-                  blendMode: "hard-light",
-                  curves: ["rgb", [0, 22], [0, 22], [255, 200], [255, 200]]
-                }
-                }}
-               spin={["image", "domain"]}
-               />
 
            <h2>Colors</h2>
            <p>the thumbnails <em>mostly</em> use topic colors for a given domain. Currently, they're given as:</p>
@@ -800,6 +785,21 @@ var StyleGuide = React.createClass({
                 title="Weekly topics in linear algebra (affine transforms)"
                 titleProps={{fontSize: 12, width: 110}} />
            </div>
+
+           <ManyOf type={SearchThumb} count={8}
+             childProps={{
+              domain: domains,
+              image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
+                return "img/maththumbs/math" + e; }),
+              overlayProps: {
+                blendMode: "multiply",
+                curves: ["rgb", [0, 125], [0, 125], [255, 255], [255, 255]]
+              }
+
+              }}
+             spin={["image", "domain"]}
+             />
+
 
            <h2>Thumb Sizes</h2>
            <p>Although all the thumbs here have been 160 &times; 90, thumbnails exist
