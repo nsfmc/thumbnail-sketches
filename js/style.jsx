@@ -311,8 +311,8 @@ var DomainOverlay = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      curves: ["rgb", [0, 80], [0, 80], [255, 170], [255, 170]],
-      saturation: -15,
+      curves: ["rgb", [0, 125], [0, 125], [255, 255], [255, 255]],
+      saturation: -50,
       blendMode: "multiply"
     }
   },
@@ -625,10 +625,6 @@ var StyleGuide = React.createClass({
           <div title="an external youtube thumbnail" aria-hidden="true">
             <SearchThumb
              domain="economics" title="KA Thumbnail Style Guide" image="img/james.jpg"
-             overlayProps={{
-              blendMode: "multiply",
-              curves: ["rgb", [0, 125], [0, 125], [255, 255], [255, 255]]
-             }}
              width={560} />
           </div>
           <p>This is the style guide for video thumbnails, it talks a bit about how we got here, a bit about how
