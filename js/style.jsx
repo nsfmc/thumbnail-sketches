@@ -836,16 +836,14 @@ var StyleGuide = React.createClass({
                 titleProps={{fontSize: 12, width: 110}} />
            </div>
 
+           <h2>Many color overlays</h2>
+           <p>Here's a sampling of what you might see for thumbnails</p>
            <ManyOf type={SearchThumb} count={8}
+             randomString="some videos and also exercises "
              childProps={{
               domain: domains,
               image: [".jpeg", "-1.jpeg", "-2.jpeg", "-3.jpeg", "-4.jpeg", "-5.jpeg", "-6.jpeg", ".png", "-1.png"].map(function(e){
                 return "img/maththumbs/math" + e; }),
-              overlayProps: {
-                blendMode: "multiply",
-                curves: ["rgb", [0, 125], [0, 125], [255, 255], [255, 255]]
-              }
-
               }}
              spin={["image", "domain"]}
              />
