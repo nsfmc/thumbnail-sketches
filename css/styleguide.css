@@ -1,7 +1,7 @@
 /* styleguide.css */
 @font-face {
   font-family: FontAwesome;
-  src: url(https://www.khanacademy.org/fonts/fontawesome-webfont.woff?v=3.6.7);
+  src: url(/thumbnail-sketches/css/fontawesome-webfont.woff?v=3.6.7);
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: "proxima-nova-condensed",  sans-serif;
